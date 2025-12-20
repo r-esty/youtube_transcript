@@ -1,9 +1,13 @@
 from flask import Flask, render_template, request
 import json
 import os
+import logging
 from dotenv import load_dotenv, dotenv_values
 from youtube_transcript_api import YouTubeTranscriptApi
 from openai import OpenAI
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 client = OpenAI(
@@ -21,8 +25,9 @@ def link():
         youtube_link = request.form.get("link")
         try:
             video_id = youtube_link.replace("https://www.youtube.com/watch?v=","").split("&")[0]
+            logger.info(f"Video ID: {video_id}")
             transcript = ytt_api.fetch(video_id)
-            
+            logger.info(f"Got transcript")
             response = client.responses.create(
                 model="gpt-4o",
                 input=f"Give a short but detailed summary of {transcript}. However if the transcript is none then just greet and ask them to give a Youtube link with transcript use the word transcript enabled so that you can provide a summary of the Youtube video"
@@ -30,6 +35,7 @@ def link():
             summary = response.output_text
             print(response.output_text)
         except Exception as e:
+            logger.error(f"Error: {e}")
             print(f"Error: {e}")
             summary = "Hi! Please share a YouTube link **that has transcript enabled**, and I'll give you a short but detailed summary of the video."
     

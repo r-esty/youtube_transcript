@@ -64,7 +64,7 @@ variable "public_2_az" {
 variable "app_name" {
     type = string
     description = "The name of application"
-    default = "Youtube_Transcript"
+    default = "youtube_transcript"
 
 }
 

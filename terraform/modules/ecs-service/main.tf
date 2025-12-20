@@ -1,10 +1,11 @@
 resource "aws_ecs_task_definition" "service" {
-  family = "service"
+  family                   = "service"
   requires_compatibilities = ["FARGATE"]
-  cpu = 256
-  memory = 512
-  network_mode = "awsvpc"
-  execution_role_arn = var.ecs_task_execution_role_arn
+  cpu                      = "256"
+  memory                   = "512"
+  network_mode             = "awsvpc"
+  execution_role_arn       = var.ecs_task_execution_role_arn
+  
   container_definitions = jsonencode([
     {
       name      = "${var.app_name}_ecs_task"
@@ -12,17 +13,37 @@ resource "aws_ecs_task_definition" "service" {
       cpu       = 256
       memory    = 512
       essential = true
+      
       portMappings = [
         {
           containerPort = 5000
           hostPort      = 5000
         }
       ]
-    }
-   
+      
+      environment = [
+        {
+          name  = "OPENAI_API_KEY"
+          value = var.openai_api_key
+        }
       ]
-    
-  )
+      
+logConfiguration = {
+  logDriver = "awslogs"
+  options = {
+    "awslogs-group"         = "/ecs/${var.app_name}"
+    "awslogs-region"        = "eu-west-2"
+    "awslogs-stream-prefix" = "ecs"
+  }
+}
+    }
+  ])
+}
+
+
+resource "aws_cloudwatch_log_group" "ecs" {
+  name              = "/ecs/${var.app_name}"
+  retention_in_days = 7
 }
 
 resource "aws_ecs_service" "ecs_service" {
@@ -31,6 +52,8 @@ resource "aws_ecs_service" "ecs_service" {
   task_definition = aws_ecs_task_definition.service.arn 
   desired_count   = 2
   launch_type = "FARGATE"
+
+  
 
 
 

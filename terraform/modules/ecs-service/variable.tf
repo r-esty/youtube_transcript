@@ -29,3 +29,8 @@ type = string
 variable "ecs_security_group_id" {
 type = string
 }
+
+variable "openai_api_key" {
+  type      = string
+  sensitive = true
+}
