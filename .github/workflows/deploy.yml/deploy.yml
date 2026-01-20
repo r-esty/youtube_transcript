@@ -1,0 +1,41 @@
+name: Deploy app to ECS
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'transcript_scrape.py'
+      - 'Dockerfile'
+      - 'requirements.txt'
+      - '.github/workflows/deploy.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+      
+      - name: Login to ECR
+        run: aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 207567788282.dkr.ecr.eu-west-2.amazonaws.com
+      
+      - name: Build Docker image
+        run: docker build -t youtube_transcript:latest .
+      
+      - name: Tag image for ECR
+        run: docker tag youtube_transcript:latest 207567788282.dkr.ecr.eu-west-2.amazonaws.com/youtube_transcript:latest
+      
+      - name: Push to ECR
+        run: docker push 207567788282.dkr.ecr.eu-west-2.amazonaws.com/youtube_transcript:latest
+      
+      - name: Update ECS service
+        run: aws ecs update-service --cluster youtube-transcript_ecs_cluster --service youtube-transcript_ecs_service --force-new-deployment --region eu-west-2
