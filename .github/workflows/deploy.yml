@@ -32,10 +32,10 @@ jobs:
         run: docker build -t youtube_transcript:latest .
       
       - name: Tag image for ECR
-        run: docker tag youtube_transcript:latest 207567788282.dkr.ecr.eu-west-2.amazonaws.com/youtube_transcript:latest
+        run: docker tag youtube_transcript:latest 207567788282.dkr.ecr.eu-west-2.amazonaws.com/youtube-transcript_ecr
       
       - name: Push to ECR
-        run: docker push 207567788282.dkr.ecr.eu-west-2.amazonaws.com/youtube_transcript:latest
+        run: docker push 207567788282.dkr.ecr.eu-west-2.amazonaws.com/youtube-transcript_ecr
       
       - name: Update ECS service
         run: aws ecs update-service --cluster youtube-transcript_ecs_cluster --service youtube-transcript_ecs_service --force-new-deployment --region eu-west-2
