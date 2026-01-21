@@ -49,13 +49,11 @@ module "ecs_service" {
   ecs_security_group_id       = module.networking.ecs_security_group_id
   openai_api_key = var.openai_api_key
 }
-
+#test
 module "ecr" {
 
   source = "./modules/ecr"
 
   app_name = var.app_name
   
-
-
 }
