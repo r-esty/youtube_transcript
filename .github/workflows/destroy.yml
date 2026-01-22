@@ -22,6 +22,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Destroy
+        working-directory: ./terraform
         run: terraform destroy -auto-approve
         env:
           TF_VAR_openai_api_key: ${{ secrets.OPENAI_API_KEY }}
