@@ -44,12 +44,12 @@ variable "openai_api_key" {
 }
 
 variable "domain_name" {
-  type = string
+  type    = string
   default = "romeoesty.com"
 }
 
 variable "zone_id" {
 
   type = string
-  
+
 }
