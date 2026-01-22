@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   terraform:
-    name: 'Terraform Plan'
+    name: 'Terraform Apply'
     runs-on: ubuntu-latest
     
     steps:
@@ -41,6 +41,8 @@ jobs:
         working-directory: ./terraform
         env:
           TF_VAR_openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          TF_VAR_zone_id: ${{ secrets.AWS_ZONE_ID }}
+
         run: terraform plan -input=false
 
       - name: Terraform Apply
