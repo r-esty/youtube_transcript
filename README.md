@@ -137,6 +137,12 @@ http://localhost:5000
 
 ## Screenshots
 
+
+**App Locally**
+
+<img width="1920" height="969" alt="image" src="https://github.com/user-attachments/assets/7d5d89dc-6a9c-4812-a364-c1d941e8b5ee" />
+
+
 **GitHub Actions CI/CD Pipeline**
 
 <img width="1920" height="925" alt="image" src="https://github.com/user-attachments/assets/b815a4fa-074e-48e2-a65e-d357da7eaa08" />
